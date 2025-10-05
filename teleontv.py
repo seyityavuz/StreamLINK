@@ -21,6 +21,9 @@ def get_m3u8(url, quality="best"):
         return None
 
 if __name__ == "__main__":
+    if OUT_DIR.exists() and not OUT_DIR.is_dir():
+    OUT_DIR.unlink()  # eğer dosya olarak varsa sil
+OUT_DIR.mkdir(parents=True, exist_ok=True) 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     m3u8 = get_m3u8(URL, QUALITY)
     if m3u8:
