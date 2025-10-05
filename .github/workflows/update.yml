@@ -2,7 +2,7 @@ name: Update m3u8 links
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # her 5 dakikada bir çalışır
+    - cron: "* * * * *"   # her dakika çalışır
   workflow_dispatch:        # elle tetikleme imkanı
 
 jobs:
@@ -34,6 +34,3 @@ jobs:
           else
             echo "Yeni değişiklik yok, push atlanıyor."
           fi
-
-
-
