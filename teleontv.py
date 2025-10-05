@@ -1,6 +1,12 @@
 import subprocess
 import time
-import os
+from datetime import datetime
+from pathlib import Path
+
+URL = "https://kick.com/teleontv"
+QUALITY = "best"
+OUT_DIR = Path("linkler")
+WRITE_HISTORY = True   # history.txt'ye ekleme açık
 
 def get_m3u8(url, quality="best"):
     try:
@@ -15,25 +21,33 @@ def get_m3u8(url, quality="best"):
         print("Hata:", e.stderr)
         return None
 
-def main():
-    url = "https://kick.com/teleontv"
-    quality = "best"
+def write_files(m3u8):
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    ts = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
+    # Zaman damgalı dosya
+    file_ts = OUT_DIR / f"teleontv-{ts}.txt"
+    file_ts.write_text(m3u8 + "\n", encoding="utf-8")
+    print("Yeni dosya:", file_ts)
 
-    while True:
-        m3u8 = get_m3u8(url, quality)
-        if m3u8:
-            print(f"[{time.strftime('%H:%M:%S')}] Güncel m3u8: {m3u8}")
-            # m3u8 linkini dosyaya yaz
-            with open("current_url.txt", "w", encoding="utf-8") as f:
-                f.write(m3u8 + "\n")
+    # Son güncel link
+    latest = OUT_DIR / "latest.txt"
+    latest.write_text(f"# UTC: {ts}\n{m3u8}\n", encoding="utf-8")
+    print("Güncel dosya:", latest)
 
-            # Git komutları ile GitHub’a push et
-            os.system("git add current_url.txt")
-            os.system(f'git commit -m "Update m3u8 {time.strftime("%Y-%m-%d %H:%M:%S")}"')
-            os.system("git push origin main")
-        else:
-            print("Link alınamadı.")
-        time.sleep(60)  # 60 saniyede bir yenile
+    # Geçmiş kayıt
+    if WRITE_HISTORY:
+        history = OUT_DIR / "history.txt"
+        with history.open("a", encoding="utf-8") as f:
+            f.write(f"{ts} UTC\t{m3u8}\n")
 
 if __name__ == "__main__":
-    main()
+    # Bu döngü GitHub Actions içinde birkaç kez çalışacak şekilde tasarlandı.
+    # Lokal kullanımda sonsuz döngüye de alabilirsin.
+    iterations = 5  # 5 kez (yaklaşık 5 dakika) çalışır
+    for i in range(iterations):
+        m3u8 = get_m3u8(URL, QUALITY)
+        if m3u8:
+            write_files(m3u8)
+        else:
+            print("Link alınamadı.")
+        time.sleep(60)
