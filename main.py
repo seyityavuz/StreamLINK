@@ -1,5 +1,4 @@
 import subprocess
-import sys
 import time
 
 def get_m3u8(url, quality="best"):
@@ -17,12 +16,8 @@ def get_m3u8(url, quality="best"):
         return None
 
 def main():
-    if len(sys.argv) < 2:
-        print("Kullanım: python main.py <yayın-url> [kalite]")
-        sys.exit(1)
-
-    url = sys.argv[1]
-    quality = sys.argv[2] if len(sys.argv) > 2 else "best"
+    url = "https://kick.com/teleontv"   # Sabit kanal adresi
+    quality = "best"                    # İstersen "720p" vb. yapabilirsin
 
     while True:
         m3u8 = get_m3u8(url, quality)
