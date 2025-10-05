@@ -1,5 +1,5 @@
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 URL = "https://kick.com/teleontv"
@@ -20,14 +20,13 @@ def get_m3u8(url, quality="best"):
         return None
 
 if __name__ == "__main__":
-    # Eğer 'linkler' diye dosya varsa sil, klasör aç
     if OUT_DIR.exists() and not OUT_DIR.is_dir():
         OUT_DIR.unlink()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     m3u8 = get_m3u8(URL, QUALITY)
     if m3u8:
-        ts = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
 
         # Zaman damgalı dosya
         file_ts = OUT_DIR / f"teleontv-{ts}.txt"
