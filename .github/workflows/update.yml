@@ -32,6 +32,8 @@ jobs:
             git commit -m "Update m3u8 links: $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
             git push
           else
-            echo "Yeni değişiklik yok."
+            echo "Yeni değişiklik yok, push atlanıyor."
+          fi
+
 
 
