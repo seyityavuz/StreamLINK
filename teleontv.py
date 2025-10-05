@@ -21,17 +21,22 @@ def get_m3u8(url, quality="best"):
         return None
 
 if __name__ == "__main__":
+    # Eğer 'linkler' diye bir dosya varsa sil, klasör aç
     if OUT_DIR.exists() and not OUT_DIR.is_dir():
-    OUT_DIR.unlink()  # eğer dosya olarak varsa sil
-OUT_DIR.mkdir(parents=True, exist_ok=True) 
+        OUT_DIR.unlink()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+
     m3u8 = get_m3u8(URL, QUALITY)
     if m3u8:
         ts = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
+        # Zaman damgalı dosya
         file_ts = OUT_DIR / f"teleontv-{ts}.txt"
         file_ts.write_text(m3u8 + "\n", encoding="utf-8")
+        print("Yeni dosya oluşturuldu:", file_ts)
+
+        # Son güncel link
         latest = OUT_DIR / "latest.txt"
         latest.write_text(m3u8 + "\n", encoding="utf-8")
-        print("Dosyalar güncellendi.")
+        print("latest.txt güncellendi.")
     else:
         print("Link alınamadı.")
