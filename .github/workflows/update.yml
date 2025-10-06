@@ -2,8 +2,8 @@ name: M3U Güncelle
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Her 10 dakikada bir çalışır
-  workflow_dispatch:        # Manuel başlatma desteği
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 jobs:
   update-m3u:
@@ -20,7 +20,7 @@ jobs:
           pip install streamlink
 
       - name: M3U dosyasını güncelle
-        run: python3 teleon.py
+        run: python3 teleontv.py
 
       - name: Değişiklikleri GitHub'a gönder
         run: |
