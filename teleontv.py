@@ -1,9 +1,8 @@
 import subprocess
 import time
-import os
 
 URL = "https://kick.com/teleontv"
-OUTPUT_PATH = "linkler/teleontvlinki.m3u"
+OUTPUT_PATH = "teleontvlinki.m3u"  # Sadece dosya, klasör yok
 
 def update_m3u():
     result = subprocess.run(
@@ -18,11 +17,6 @@ def update_m3u():
         print("Güncellendi:", stream_url)
     else:
         print("Streamlink hatası:", result.stderr.strip())
-
-# Klasör kontrolü
-if not os.path.isdir("linkler"):
-    print("Hata: 'linkler' klasörü bulunamadı.")
-    exit(1)
 
 # Sonsuz döngü
 while True:
