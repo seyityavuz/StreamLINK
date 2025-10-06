@@ -1,12 +1,12 @@
-name: M3U Güncelle
+name: M3U8 Güncelle
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
+    - cron: '*/10 * * * *'  # Her 10 dakikada bir çalışır
+  workflow_dispatch:        # Manuel başlatma desteği
 
 jobs:
-  update-m3u:
+  update-m3u8:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,13 +19,13 @@ jobs:
           sudo apt install -y python3-pip
           pip install streamlink
 
-      - name: M3U dosyasını güncelle
+      - name: M3U8 dosyasını güncelle
         run: python3 teleontv.py
 
       - name: Değişiklikleri GitHub'a gönder
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add linkler/teleontvlinki.m3u
-          git commit -m "M3U güncellendi: $(date)"
+          git add linkler/teleontvlinki.m3u8
+          git commit -m "M3U8 güncellendi: $(date)"
           git push
