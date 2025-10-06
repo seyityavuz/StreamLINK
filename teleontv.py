@@ -9,12 +9,16 @@ output_file = "teleontvlinki.m3u"
 output_path = os.path.join(output_folder, output_file)
 refresh_interval = 60  # saniye
 
-# Klasör yoksa oluştur
-os.makedirs(output_folder, exist_ok=True)
+# Klasör kontrolü
+if os.path.exists(output_folder):
+    if not os.path.isdir(output_folder):
+        os.remove(output_folder)  # Dosya varsa sil
+        os.makedirs(output_folder)
+else:
+    os.makedirs(output_folder)
 
 def get_stream_url():
     try:
-        # En iyi kaliteyi al
         result = subprocess.run(
             ["streamlink", "--stream-url", url, "best"],
             capture_output=True,
