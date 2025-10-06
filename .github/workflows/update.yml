@@ -1,9 +1,9 @@
-name: Günlük M3U Güncelleme
+name: M3U Güncelle
 
 on:
-  workflow_dispatch:  # Manuel başlatma
   schedule:
-    - cron: '*/10 * * * *'  # Her 10 dakikada bir çalışır (60 saniyelik döngü için ideal değil, GitHub Actions sınırı)
+    - cron: '*/10 * * * *'  # Her 10 dakikada bir çalışır
+  workflow_dispatch:        # Manuel başlatma desteği
 
 jobs:
   update-m3u:
@@ -20,6 +20,12 @@ jobs:
           pip install streamlink
 
       - name: M3U dosyasını güncelle
+        run: python3 teleon.py
+
+      - name: Değişiklikleri GitHub'a gönder
         run: |
-          mkdir -p linkler
-          python3 teleon.py
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add linkler/teleontvlinki.m3u
+          git commit -m "M3U güncellendi: $(date)"
+          git push
