@@ -1,4 +1,3 @@
-python
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
