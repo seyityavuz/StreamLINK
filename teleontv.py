@@ -1,41 +1,45 @@
 import subprocess
-from datetime import datetime, timezone
-from pathlib import Path
+import time
+import os
 
-URL = "https://kick.com/teleontv"
-QUALITY = "best"
-OUT_DIR = Path("linkler")
+# Ayarlar
+url = "https://kick.com/teleontv"
+output_folder = "linkler"
+output_file = "teleontvlinki.m3u"
+output_path = os.path.join(output_folder, output_file)
+refresh_interval = 60  # saniye
 
-def get_m3u8(url, quality="best"):
+# Klasör yoksa oluştur
+os.makedirs(output_folder, exist_ok=True)
+
+def get_stream_url():
     try:
+        # En iyi kaliteyi al
         result = subprocess.run(
-            ["streamlink", "--stream-url", url, quality],
+            ["streamlink", "--stream-url", url, "best"],
             capture_output=True,
-            text=True,
-            check=True
+            text=True
         )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        print("Hata:", e.stderr)
+        if result.returncode == 0:
+            return result.stdout.strip()
+        else:
+            print("Streamlink hatası:", result.stderr)
+            return None
+    except Exception as e:
+        print("Hata:", e)
         return None
 
-if name == "main":
-    if OUTDIR.exists() and not OUTDIR.is_dir():
-        OUT_DIR.unlink()
-    OUTDIR.mkdir(parents=True, existok=True)
+def write_m3u(stream_url):
+    m3u_content = f"#EXTM3U\n#EXTINF:-1,teleontv\n{stream_url}\n"
+    with open(output_path, "w") as f:
+        f.write(m3u_content)
+    print("Güncellendi:", stream_url)
 
-    m3u8 = get_m3u8(URL, QUALITY)
-    if m3u8:
-        ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-
-        # Zaman damgalı dosya
-        filets = OUTDIR / f"teleontv-{ts}.txt"
-        filets.writetext(m3u8 + "\n", encoding="utf-8")
-        print("Yeni dosya:", file_ts)
-
-        # Son güncel link
-        latest = OUT_DIR / "latest.txt"
-        latest.write_text(m3u8 + "\n", encoding="utf-8")
-        print("latest.txt güncellendi.")
+# Ana döngü
+while True:
+    stream_url = get_stream_url()
+    if stream_url:
+        write_m3u(stream_url)
     else:
-        print("Link alınamadı.")
+        print("Yayın alınamadı.")
+    time.sleep(refresh_interval)
