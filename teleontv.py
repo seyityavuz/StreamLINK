@@ -1,11 +1,10 @@
 import subprocess
-import time
 import os
 
 URL = "https://kick.com/teleontv"
 OUTPUT_PATH = "linkler/teleontvlinki.m3u"
 
-# Klasör oluşturulmamışsa oluştur
+# Klasör yoksa oluştur
 os.makedirs("linkler", exist_ok=True)
 
 def update_m3u():
@@ -22,6 +21,4 @@ def update_m3u():
     else:
         print("Streamlink hatası:", result.stderr.strip())
 
-while True:
-    update_m3u()
-    time.sleep(60)
+update_m3u()
