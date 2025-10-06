@@ -2,7 +2,7 @@ import subprocess
 import os
 
 URL = "https://kick.com/teleontv"
-OUTPUT_PATH = "linkler/teleontvlinki.m3u8"
+OUTPUT_PATH = "linkler/teleontvlinki.m3u"
 
 # Klasör yoksa oluştur
 os.makedirs("linkler", exist_ok=True)
